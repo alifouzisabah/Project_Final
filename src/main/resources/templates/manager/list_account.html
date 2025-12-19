@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لیست کاربران</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body class="p-4">
+
+<div class="container">
+    <h2 class="mb-4 text-center">لیست همه کاربران</h2>
+
+    <form th:action="@{/manager/search_users}" method="get">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">نام کاربری</label>
+                <input type="text" name="username" class="form-control" placeholder="نام کاربری">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">جنسیت</label>
+                <select name="gender" class="form-select">
+                    <option value="">همه</option>
+                    <option value="MALE">مرد</option>
+                    <option value="FEMALE">زن</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">نقش</label>
+                <select name="role" class="form-select">
+                    <option value="">همه</option>
+                    <option value="ROLE_MANAGER">مدیر</option>
+                    <option value="ROLE_TEACHER">معلم</option>
+                    <option value="ROLE_STUDENT">دانشجو</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">وضعیت</label>
+                <select name="status" class="form-select">
+                    <option value="">همه</option>
+                    <option value="ACCEPTED">تایید شده</option>
+                    <option value="WAITING">درحال انتظار</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-success w-100">جستجو</button>
+                <a th:href="@{/manager/list_account}" class="btn btn-secondary px-4">
+                    پاک‌سازی
+                </a>
+            </div>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>شناسه</th>
+            <th>نام کاربری</th>
+            <th>ایمیل</th>
+            <th>جنسیت</th>
+            <th>وضعیت</th>
+            <th>کد</th>
+            <th>نوع کاربر</th>
+            <th>عملیات</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.gender}"></td>
+            <td>
+                <span th:text="${user.status}"></span>
+                <form th:action="@{/manager/accept_user/{id}(id=${user.id})}" method="post"
+                      th:if="${user.status.name() == 'WAITING'}">
+                    <button type="submit" class="btn btn-success btn-sm mt-1">تایید</button>
+                </form>
+            </td>
+            <td th:text="${user.personCode}"></td>
+            <td th:text="${user.role}"></td>
+            <td>
+                <a th:href="@{/manager/edit_user/{id}(id=${user.id})}" class="btn btn-warning btn-sm mb-1">ویرایش</a>
+                <form th:action="@{/manager/delete_user/{id}(id=${user.id})}" method="post">
+                    <button type="submit" class="btn btn-danger btn-sm">حذف</button>
+                </form>
+            </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(users) }">
+            <td colspan="8" class="text-center">هیچ کاربری یافت نشد</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="mt-3 text-end">
+        <a th:href="@{/manager/dashboard}" class="btn btn-secondary">بازگشت</a>
+    </div>
+</div>
+
+</body>
+</html>

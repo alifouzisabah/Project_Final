@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ورود</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f7f7f7;
+            font-family: "Tahoma", sans-serif;
+        }
+        .form-container {
+            max-width: 400px;
+            margin: 80px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+        .btn-submit {
+            width: 100%;
+        }
+        .links {
+            margin-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h3 class="text-center mb-4">ورود به حساب</h3>
+
+    <form th:action="@{/login}" method="post">
+        <div class="mb-3">
+            <label class="form-label">نام کاربری</label>
+            <input type="text" class="form-control" name="username" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">رمز عبور</label>
+            <input type="password" class="form-control" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-submit">ورود</button>
+    </form>
+
+    <div class="links">
+        <a th:href="@{/forget_password}">فراموشی رمز عبور</a> |
+        <a th:href="@{/register}">ثبت‌نام</a>
+    </div>
+
+    <div th:if="${param.error}" class="alert alert-danger mt-3 text-center">
+        نام کاربری یا رمز عبور اشتباه است
+    </div>
+    <div th:if="${success}" class="alert alert-success mt-3 text-center">
+        <p th:text="${success}"></p>
+    </div>
+    <div th:if="${param.logout}" class="alert alert-success mt-3 text-center">
+        با موفقیت خارج شدید
+    </div>
+</div>
+
+</body>
+</html>

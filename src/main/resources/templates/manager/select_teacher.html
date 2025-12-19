@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لیست کاربران</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body class="p-4">
+<div th:if="${success}" class="alert alert-success mt-2" th:text="${success}"></div>
+<div th:if="${error}" class="alert alert-danger mt-2" th:text="${error}"></div>
+<div class="container">
+    <h2 class="mb-4 text-center">لیست معلمان</h2>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>شناسه</th>
+            <th>نام کاربری</th>
+            <th>ایمیل</th>
+            <th>جنسیت</th>
+            <th>وضعیت</th>
+            <th>کد</th>
+            <th>نوع کاربر</th>
+            <th>عملیات</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="teacher : ${teachers}" th:if="${teacher.status.name() == 'ACCEPTED'}">
+            <td th:text="${teacher.id}"></td>
+            <td th:text="${teacher.username}"></td>
+            <td th:text="${teacher.email}"></td>
+            <td th:text="${teacher.gender}"></td>
+            <td>
+                <span th:text="${teacher.status}"></span>
+            </td>
+            <td th:text="${teacher.personCode}"></td>
+            <td th:text="${teacher.role}"></td>
+            <td>
+                <form th:action="@{/manager/add_teacher/{courseId}/{teacherId}(courseId=${courseId}, teacherId=${teacher.id})}" method="post">
+                    <button type="submit" class="btn btn-success btn-sm">اضافه کردن</button>
+                </form>
+            </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(teachers) }">
+            <td colspan="8" class="text-center">هیچ معلمی یافت نشد</td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/manager/detail_course/{id}(id=${courseId})}"
+       class="btn btn-secondary">
+        بازگشت
+    </a>
+</div>
+
+</body>
+</html>

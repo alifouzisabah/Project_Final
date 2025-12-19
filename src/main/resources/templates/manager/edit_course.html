@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ویرایش دوره</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: "Tahoma", sans-serif;
+        }
+        .form-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+        .form-container h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #0d6efd;
+        }
+        .btn-submit {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div th:if="${success}" class="alert alert-success mt-2" th:text="${success}"></div>
+<div th:if="${error}" class="alert alert-danger mt-2" th:text="${error}"></div>
+<li th:each="err : ${errors}" >
+    <span style="color: red" th:text="${err.field}"></span> :
+    <span style="color: red" th:text="${err.defaultMessage}"></span>
+</li>
+<div class="form-container">
+    <h3 th:text="${course.getTitleCourse()}+' Course '"></h3>
+    <form th:action="@{/manager/edit_course/{id}(id=${course.id})}" method="POST">
+        <div class="mb-3">
+            <label class="form-label">عنوان دوره</label>
+            <input type="text" class="form-control" name="titleCourse" th:value="${course.titleCourse}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">تاریخ شروع</label>
+            <input type="date" class="form-control" name="startDate" th:value="${course.startDate}"  required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">تاریخ پایان</label>
+            <input type="date" class="form-control" name="endDate" th:value="${course.endDate}"  required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">ظرفیت دوره</label>
+            <input type="number" step="1" class="form-control" name="capacity"  th:value="${course.capacity}" required>
+        </div>
+        <button type="submit" class="btn btn-success btn-submit">ویرایش</button>
+    </form>
+
+
+    <div class="mt-3 text-end">
+        <a href="/manager/list_course" class="btn btn-secondary">بازگشت</a>
+    </div>
+</div>
+
+</body>
+</html>

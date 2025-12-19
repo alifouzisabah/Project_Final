@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ثبت‌نام</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f7f7f7;
+            font-family: "Tahoma", sans-serif;
+        }
+        .form-container {
+            max-width: 450px;
+            margin: 80px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+        .btn-submit {
+            width: 100%;
+        }
+        .links {
+            margin-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<li th:each="err : ${errors}" >
+    <span style="color: red" th:text="${err.field}"></span> :
+    <span style="color: red" th:text="${err.defaultMessage}"></span>
+</li>
+<div th:if="${success}" class="alert alert-success mt-2" th:text="${success}"></div>
+<div th:if="${error}" class="alert alert-danger mt-2" th:text="${error}"></div>
+
+<div class="form-container">
+    <h3 class="text-center mb-4">ثبت‌نام</h3>
+
+    <form th:action="@{/register}" method="post">
+        <div class="mb-3">
+            <label class="form-label">نام کاربری</label>
+            <input type="text" class="form-control" name="username" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">ایمیل</label>
+            <input type="email" class="form-control" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">جنسیت</label>
+            <select class="form-select" name="gender">
+                <option value="MALE">مرد</option>
+                <option value="FEMALE">زن</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">نقش</label>
+            <select class="form-select" name="role">
+                <option value="ROLE_TEACHER">معلم</option>
+                <option value="ROLE_STUDENT">دانشجو</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">رمز عبور</label>
+            <input type="password" class="form-control" name="password" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">تکرار رمز عبور</label>
+            <input type="password" class="form-control" name="repeatPassword" required>
+        </div>
+        <button type="submit" class="btn btn-success btn-submit">ثبت‌نام</button>
+    </form>
+
+    <div class="links">
+        <p>قبلاً حساب دارید؟ <a th:href="@{/login}">ورود</a></p>
+    </div>
+</div>
+
+</body>
+</html>

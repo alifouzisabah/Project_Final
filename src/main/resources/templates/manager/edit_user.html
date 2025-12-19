@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ویرایش پروفایل داتش آموز</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: "Tahoma", sans-serif;
+        }
+        .form-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+        .form-container h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #0d6efd;
+        }
+        .btn-submit {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div th:if="${success}" class="alert alert-success mt-2" th:text="${success}"></div>
+<div th:if="${error}" class="alert alert-danger mt-2" th:text="${error}"></div>
+<li th:each="err : ${errors}" >
+    <span style="color: red" th:text="${err.field}"></span> :
+    <span style="color: red" th:text="${err.defaultMessage}"></span>
+</li>
+<div class="form-container">
+    <h3 th:if="${user.role.name() == 'ROLE_STUDENT'}" th:text="${user.username + ' Student'}"></h3>
+    <h3 th:if="${user.role.name() == 'ROLE_TEACHER'}" th:text="${user.username + ' Teacher'}"></h3>
+    <h3 th:if="${user.role.name() == 'ROLE_MANAGER'}" th:text="${user.username + ' Manager'}"></h3>
+    <form th:action="@{/manager/edit_user/{id}(id=${user.id})}" method="POST">
+        <div class="mb-3">
+            <label class="form-label">نام کاربری</label>
+            <input type="text" class="form-control" name="username" th:value="${user.username}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">پسوورد</label>
+            <input type="password" class="form-control" name="password" th:value="${user.password}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">تکرار پسوورد</label>
+            <input type="password" class="form-control" name="repeatPassword" th:value="${user.password}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">ایمیل</label>
+            <input type="text" class="form-control" name="email" th:value="${user.email}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">جنسیت</label>
+            <select class="form-select" name="gender" required>
+                <option value="MALE">مرد</option>
+                <option value="FEMALE">زن</option>
+
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">نقش</label>
+            <select class="form-select" name="role" required>
+                <option value="ROLE_MANAGER">مدیر</option>
+                <option value="ROLE_TEACHER">معلم</option>
+                <option value="ROLE_STUDENT">دانشجو</option>
+
+            </select>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary btn-submit">ویرایش</button>
+    </form>
+
+
+    <div class="mt-3 text-end">
+        <a href="/manager/list_account" class="btn btn-secondary">بازگشت</a>
+    </div>
+</div>
+
+</body>
+</html>

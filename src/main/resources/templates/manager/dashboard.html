@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد مدیریت کاربران</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .card-title {
+            font-weight: bold;
+        }
+        .badge-count {
+            font-size: 1rem;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body class="p-4">
+
+<div class="container">
+    <h1 class="mb-4 text-center">داشبورد مدیریت کاربران</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">کاربران
+                        <span class="badge bg-primary badge-count" th:text="${countAccount}"></span>
+                    </h5>
+                    <a th:href="@{/manager/list_account}" class="btn btn-primary">مشاهده لیست کاربران</a>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">دوره ها
+                        <span class="badge bg-primary badge-count" th:text="${countCourse}"></span>
+                    </h5>
+                    <a th:href="@{/manager/list_course}" class="btn btn-primary">مشاهده لیست دوره ها</a>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3 text-end">
+            <a th:href="@{/logout}" class="btn btn-secondary">خروج</a>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

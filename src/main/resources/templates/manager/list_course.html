@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لیست دوره‌ها</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body class="p-4">
+
+<div class="container">
+    <a th:href="@{/manager/create_course}"
+       class="btn btn-warning btn-sm mb-1">
+        ایجاد دوره جدبد
+    </a>
+    <h2 class="mb-4 text-center">لیست همه دوره‌ها</h2>
+
+    <table class="table table-bordered table-striped text-center align-middle">
+        <thead class="table-dark">
+        <tr>
+            <th>عنوان دوره</th>
+            <th>استاد دوره</th>
+            <th>شناسه دوره</th>
+            <th>تاریخ شروع</th>
+            <th>تاریخ پایان</th>
+            <th>ظرفیت باقی مانده</th>
+            <th>ظرفیت ثباتنلم شده</th>
+            <th>عملیات</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="course : ${courses}">
+            <td th:text="${course.titleCourse}"></td>
+            <td th:text="${course.teacher != null ? course.teacher.username : '—'}"></td>
+            <td th:text="${course.courseCode}"></td>
+            <td th:text="${course.startDate}"></td>
+            <td th:text="${course.endDate}"></td>
+            <td th:text="${course.capacity}"></td>
+            <td th:text="${course.countRegister}"></td>
+
+            <td>
+                <a th:href="@{/manager/edit_course/{id}(id=${course.id})}"
+                   class="btn btn-warning btn-sm mb-1">
+                    ویرایش
+                </a>
+
+                <form th:action="@{/manager/delete_course/{id}(id=${course.id})}"
+                      method="post"
+                      style="display:inline;"
+                      onsubmit="return confirm('آیا از حذف این دوره مطمئن هستید؟');">
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        حذف
+                    </button>
+                </form>
+
+                <a th:href="@{/manager/detail_course/{id}(id=${course.id})}"
+                   class="btn btn-warning btn-sm mb-1">
+                    جزییات دوره
+                </a>
+            </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(courses)}">
+            <td colspan="6" class="text-center text-muted">
+                هیچ دوره‌ای یافت نشد
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="mt-3 text-end">
+        <a th:href="@{/manager/dashboard}" class="btn btn-secondary">بازگشت</a>
+    </div>
+</div>
+
+</body>
+</html>

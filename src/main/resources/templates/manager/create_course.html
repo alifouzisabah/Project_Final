@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ایجاد دوره</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f7f7f7;
+            font-family: "Tahoma", sans-serif;
+        }
+        .form-container {
+            max-width: 450px;
+            margin: 80px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+        .btn-submit {
+            width: 100%;
+        }
+        .links {
+            margin-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div th:if="${success}" class="alert alert-success mt-2" th:text="${success}"></div>
+<li th:each="err : ${errors}" >
+    <span style="color: red" th:text="${err.field}"></span> :
+    <span style="color: red" th:text="${err.defaultMessage}"></span>
+</li>
+<div class="form-container">
+    <h3 class="text-center mb-4">دوره جدید</h3>
+
+    <form th:action="@{/manager/create_course}" method="post">
+        <div class="mb-3">
+            <label class="form-label">عنوان دوره</label>
+            <input type="text" class="form-control" name="titleCourse" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">تاریخ شروع</label>
+            <input type="date" class="form-control" name="startDate" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">تاریخ پایان</label>
+            <input type="date" class="form-control" name="endDate" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">ظرفیت دوره</label>
+            <input type="number" step="1" class="form-control" name="capacity" required>
+        </div>
+        <button type="submit" class="btn btn-success btn-submit">ایجاد</button>
+    </form>
+
+    <div class="links">
+        <div class="mt-3 text-end">
+            <a th:href="@{/manager/list_course}" class="btn btn-secondary">بازگشت</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
