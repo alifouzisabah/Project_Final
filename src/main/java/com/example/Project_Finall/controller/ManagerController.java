@@ -60,7 +60,7 @@ public class ManagerController {
     public String acceptUser(@PathVariable Long id) {
         Users user = usersService.findById(id)
                 .orElseThrow(() -> new RuntimeException("Account Not Found"));
-        usersService.acceptStatusUser(user);
+        usersService.acceptStatusUser(user ,id);
         return "redirect:/manager/list_account";
     }
 
@@ -102,11 +102,15 @@ public class ManagerController {
     }
 
     @PostMapping("/delete_user/{id}")
-    public String deleteStudent(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String deleteStudent(@PathVariable Long id, RedirectAttributes redirectAttributes,BindingResult bindingResult) {
         Optional<Users> foundUser = usersService.findById(id);
         if (foundUser.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "User Not Found");
             return "redirect:/manager/list_account";
+        }
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getFieldError());
+            return "/manager/edit_course";
         }
         usersService.deleteById(id);
         redirectAttributes.addFlashAttribute("success", foundUser.get().getUsername() + "Deleted Successfully");

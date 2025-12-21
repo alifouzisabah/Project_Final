@@ -34,12 +34,16 @@ public class StudentsServiceImpl implements StudentsService {
                 student.getEmail() == null) {
             throw new IllegalArgumentException("Invalid values");
         }
-        student.setPersonCode("STD-" + (100 + new Random().nextInt(900)));
-        student.setPassword(passwordEncoder.encode(student.getPassword()));
-        student.setStatus(Status.WAITING);
-        student.setRole(Role.ROLE_STUDENT);
-
-        return usersRepository.save(student);
+        Students students=Students.builder()
+                .username(student.getUsername())
+                .password(passwordEncoder.encode(student.getPassword()))
+                .status(Status.WAITING)
+                .role(Role.ROLE_STUDENT)
+                .email(student.getEmail())
+                .gender(student.getGender())
+                .personCode("STD-" + (100 + new Random().nextInt(900)))
+                .build();
+        return usersRepository.save(students);
     }
 
     @Override

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ایجاد آزمون</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f7f7f7;
+            font-family: "Tahoma", sans-serif;
+        }
+        .form-container {
+            max-width: 450px;
+            margin: 80px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+        .btn-submit {
+            width: 100%;
+        }
+        .links {
+            margin-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div th:if="${success}" class="alert alert-success mt-2" th:text="${success}"></div>
+<li th:each="err : ${errors}" >
+    <span style="color: red" th:text="${err.field}"></span> :
+    <span style="color: red" th:text="${err.defaultMessage}"></span>
+</li>
+<div class="form-container">
+    <h3 class="text-center mb-4">آزمون جدید</h3>
+
+    <form th:action="@{/teacher/edit_quiz/{quizId}(quizId=${quiz.id})}" method="post">
+
+        <div class="mb-3">
+            <label class="form-label">عنوان آزمون</label>
+            <input type="text" class="form-control" name="titleQuiz" th:value="${quiz.titleQuiz}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">توضیحات</label>
+            <textarea class="form-control" name="description" rows="3" th:value="${quiz.getDescription()}" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">زمان آزمون (دقیقه)</label>
+            <input type="number" class="form-control" name="timeQuiz" min="1" th:value="${quiz.durationInMinutes}" required>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-submit">بروزرسانی</button>
+    </form>
+
+    <div class="links">
+        <div class="mt-3 text-end">
+            <a th:href="@{/teacher/list_quiz/{id}(id=${course.id})}" class="btn btn-secondary">بازگشت</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -15,7 +15,7 @@ public interface UsersService extends BaseService<Users, Long> {
 
     Users resetPassword(String username, String newPassword);
 
-    void acceptStatusUser(Users users);
+    void acceptStatusUser(Users users,Long userId);
 
     List<Users> search(String username, Gender gender, Role role, Status status);
 }

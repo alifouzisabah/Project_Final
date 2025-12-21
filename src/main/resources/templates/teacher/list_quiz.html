@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لیست دوره‌ها</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body class="p-4">
+<div class="container">
+    <a th:href="@{/teacher/create_quiz/{courseId}(courseId=${course.id})}"
+       class="btn btn-warning btn-sm mb-1">
+        ایجاد آزمون جدبد
+    </a>
+    <h2 th:text="'List Quizs For '+${course.titleCourse}" class="mb-4 text-center"></h2>
+
+    <table class="table table-bordered table-striped text-center align-middle">
+        <thead class="table-dark">
+        <tr>
+            <th>عنوان آزمون</th>
+            <th>استاد دوره</th>
+            <th>توضیحات</th>
+            <th>زمان آزمون</th>
+            <th>عملیات</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="quiz : ${listQuizByCourse}">
+            <td th:text="${quiz.titleQuiz}"></td>
+            <td th:text="${quiz.teacher != null ? quiz.teacher.username : '—'}"></td>
+            <td th:text="${quiz.description}"></td>
+            <td th:text="${quiz.durationInMinutes}"></td>
+
+            <td>
+
+                <a th:if="${quiz.teacher==teacher}" th:href="@{/teacher/edit_quiz/{id}(id=${quiz.id})}"
+                   class="btn btn-warning btn-sm mb-1">
+                    ویرایش آزمون
+                </a>
+                <form th:action="@{/teacher/delete_quiz/{id}(id=${quiz.id})}" method="post">
+                    <button type="submit" class="btn btn-danger btn-sm">حذف</button>
+                </form>
+            </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(listQuizByCourse)}">
+            <td colspan="6" class="text-center text-muted">
+                هیچ آزمونی یافت نشد
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <h2 th:text="'List Quizs For '+${teacher.username}" class="mb-4 text-center"></h2>
+
+    <table class="table table-bordered table-striped text-center align-middle">
+        <thead class="table-dark">
+        <tr>
+            <th>عنوان آزمون</th>
+            <th>استاد دوره</th>
+            <th>توضیحات</th>
+            <th>زمان آزمون</th>
+            <th>عملیات</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="quiz : ${listQuizByTeacher}">
+            <td th:text="${quiz.titleQuiz}"></td>
+            <td th:text="${quiz.teacher != null ? quiz.teacher.username : '—'}"></td>
+            <td th:text="${quiz.description}"></td>
+            <td th:text="${quiz.durationInMinutes}"></td>
+
+            <td>
+
+                <a th:href="@{/teacher/edit_quiz/{id}(id=${quiz.id})}"
+                   class="btn btn-warning btn-sm mb-1">
+                    ویرایش آزمون
+                </a>
+                <form th:action="@{/teacher/delete_quiz/{id}(id=${quiz.id})}" method="post">
+                    <button type="submit" class="btn btn-danger btn-sm">حذف</button>
+                </form>
+            </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(listQuizByTeacher)}">
+            <td colspan="6" class="text-center text-muted">
+                هیچ آزمونی یافت نشد
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="mt-3 text-end">
+        <a th:href="@{/teacher/dashboard}" class="btn btn-danger">بازگشت</a>
+    </div>
+</div>
+
+</body>
+</html>

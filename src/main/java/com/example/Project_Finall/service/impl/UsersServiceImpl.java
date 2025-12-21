@@ -18,8 +18,7 @@ import static com.example.Project_Finall.modell.Role.*;
 public class UsersServiceImpl implements UsersService {
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
-    @PersistenceContext
-    private EntityManager entityManager;
+
 
     @Autowired
     public UsersServiceImpl(UsersRepository usersRepository, PasswordEncoder passwordEncoder) {
@@ -35,33 +34,35 @@ public class UsersServiceImpl implements UsersService {
         if (usersRepository.findByUsernameIgnoreCase(user.getUsername()).isPresent()) {
             throw new RuntimeException("Username already exists");
         }
+        //***
+        Users newUser;
         switch (user.getRole()) {
             case ROLE_STUDENT:
-                user = new Students();
-                user.setRole(Role.ROLE_STUDENT);
-                user.setStatus(Status.WAITING);
-                user.setPersonCode("STD-" + (100 + new Random().nextInt(900)));
+                newUser = new Students();
+                newUser.setRole(Role.ROLE_STUDENT);
+                newUser.setStatus(Status.WAITING);
+                newUser.setPersonCode("STD-" + (100 + new Random().nextInt(900)));
                 break;
             case ROLE_TEACHER:
-                user = new Teacher();
-                user.setRole(ROLE_TEACHER);
-                user.setStatus(Status.WAITING);
-                user.setPersonCode("TCH-" + (100 + new Random().nextInt(900)));
+                newUser = new Teacher();
+                newUser.setRole(ROLE_TEACHER);
+                newUser.setStatus(Status.WAITING);
+                newUser.setPersonCode("TCH-" + (100 + new Random().nextInt(900)));
                 break;
             case ROLE_MANAGER:
-                user = new Manager();
-                user.setRole(ROLE_MANAGER);
-                user.setStatus(Status.ACCEPTED);
-                user.setPersonCode("MNG-" + (100 + new Random().nextInt(900)));
+                newUser = new Manager();
+                newUser.setRole(ROLE_MANAGER);
+                newUser.setStatus(Status.ACCEPTED);
+                newUser.setPersonCode("MNG-" + (100 + new Random().nextInt(900)));
                 break;
             default:
                 throw new IllegalArgumentException("Role not supported");
         }
-        user.setUsername(user.getUsername());
-        user.setEmail(user.getEmail());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setGender(user.getGender());
-        return usersRepository.save(user);
+        newUser.setUsername(user.getUsername());
+        newUser.setEmail(user.getEmail());
+        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        newUser.setGender(user.getGender());
+        return usersRepository.save(newUser);
     }
 
     @Override
@@ -73,7 +74,24 @@ public class UsersServiceImpl implements UsersService {
     public void deleteById(Long aLong) {
         Users users = usersRepository.findById(aLong)
                 .orElseThrow(() -> new RuntimeException("Users Not Found"));
-        usersRepository.delete(users);
+        if (users instanceof Students) {
+            Students student = (Students) users;
+
+            if (!student.getCourses().isEmpty()) {
+                throw new RuntimeException("First delete courses");
+            }
+
+            usersRepository.delete(student);
+        } else if (users instanceof Teacher) {
+            Teacher teacher = (Teacher) users;
+            if (!teacher.getCourses().isEmpty()) {
+                throw new RuntimeException("First Delete Course");
+            }
+            usersRepository.delete(teacher);
+        } else if (users instanceof Manager) {
+            Manager manager = (Manager) users;
+            usersRepository.delete(manager);
+        }
     }
 
     @Override
@@ -81,7 +99,7 @@ public class UsersServiceImpl implements UsersService {
         return usersRepository.findAll();
     }
 
-
+    //
     @Transactional
     @Override
     public Users update(Users entity, Long userId) {
@@ -99,7 +117,6 @@ public class UsersServiceImpl implements UsersService {
         Users newUser;
         switch (entity.getRole()) {
             case ROLE_STUDENT:
-
                 newUser = Students.builder()
                         .username(entity.getUsername())
                         .password(passwordEncoder.encode(entity.getPassword()))
@@ -171,21 +188,25 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public void acceptStatusUser(Users users) {
-        if (users.getStatus() != Status.ACCEPTED) {
-            users.setStatus(Status.ACCEPTED);
-            update(users, users.getId());
+    public void acceptStatusUser(Users users,Long userId) {
+        Users user = usersRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User Not Found"));
+        if (user.getStatus() != Status.ACCEPTED) {
+            user.setStatus(Status.ACCEPTED);
+            usersRepository.save(user);
             System.out.println("Status Account Is Accept");
         } else {
             System.out.println("Account Already Accepted");
         }
     }
 
+    //specification
+    //criteria bulider
     @Override
     public List<Users> search(String username, Gender gender, Role role, Status status) {
         List<Users> result = usersRepository.findAll();
         if (username != null && !username.isEmpty()) {
-            result.retainAll(usersRepository.findAllByUsernameIgnoreCase(username));
+            result.retainAll(usersRepository.findAllByUsernameIgnoreCaseStartingWith(username));
         }
         if (gender != null) {
             result.retainAll(usersRepository.findAllByGender(gender));

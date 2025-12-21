@@ -34,7 +34,8 @@ public class Courses extends BaseModel<Long>{
             inverseJoinColumns = @JoinColumn(name = "student_id")
     )
     private List<Students> students = new ArrayList<>();
-
+    @OneToMany(mappedBy = "courses")
+    private List<Quiz> quizList=new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;

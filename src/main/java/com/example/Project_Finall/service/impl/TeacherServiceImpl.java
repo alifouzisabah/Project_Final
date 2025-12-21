@@ -1,7 +1,5 @@
 package com.example.Project_Finall.service.impl;
-import com.example.Project_Finall.modell.Role;
-import com.example.Project_Finall.modell.Status;
-import com.example.Project_Finall.modell.Teacher;
+import com.example.Project_Finall.modell.*;
 import com.example.Project_Finall.repository.UsersRepository;
 import com.example.Project_Finall.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +29,16 @@ public class TeacherServiceImpl implements TeacherService {
                 teacher.getEmail() == null) {
             throw new IllegalArgumentException("Invalid values");
         }
-
-        teacher.setPersonCode("TCH-" + (100 + new Random().nextInt(900)));
-        teacher.setPassword(passwordEncoder.encode(teacher.getPassword()));
-        teacher.setStatus(Status.WAITING);
-        teacher.setRole(Role.ROLE_TEACHER);
-
-        return usersRepository.save(teacher);
+        Teacher teachers=Teacher.builder()
+                .username(teacher.getUsername())
+                .password(passwordEncoder.encode(teacher.getPassword()))
+                .status(Status.WAITING)
+                .role(Role.ROLE_TEACHER)
+                .email(teacher.getEmail())
+                .gender(teacher.getGender())
+                .personCode("TCH-" + (100 + new Random().nextInt(900)))
+                .build();
+        return usersRepository.save(teachers);
     }
 
     @Override
@@ -69,5 +70,15 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public void deleteById(Long id) {
         usersRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Teacher> findByUsernameIgnoreCase(String username) {
+        Users users = usersRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> new RuntimeException("Teacher Not Found"));
+        if (users instanceof Teacher){
+            Teacher teacher=(Teacher) users;
+            return Optional.of(teacher);
+        }
+        return Optional.empty();
     }
 }
